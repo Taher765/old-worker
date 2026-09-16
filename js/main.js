@@ -124,47 +124,54 @@ async function displayData(data) {
 
   let content = ``;
 
-  const weekEndDate = new Date(data.data?.week.endDate);
+  //   const weekEndDate = new Date(data.data?.week.endDate);
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  //   const today = new Date();
+  //   today.setHours(0, 0, 0, 0);
 
-  const isPastWeek = weekEndDate < today;
+  //   const isPastWeek = weekEndDate < today;
+  // ${isPastWeek ? "disabled" : ""}
+  // ${isPastWeek ? "disabled" : ""}
+  // ${isPastWeek ? "disabled" : ""}
+  // ${isPastWeek ? "disabled" : ""}
+  // ${isPastWeek ? "disabled" : ""}
+  // ${isPastWeek ? "disabled" : ""}
+  // ${isPastWeek ? "disabled" : ""}
 
   data.data.workers.forEach((data) => {
     content += `
              <tr >
                 <td>${data.worker.name}</td>
                 <td>${data.worker.currentWage}</td>
-                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[0]?.date}' , event)" ${data?.days[0]?.attended ? "checked" : ""} ${isPastWeek ? "disabled" : ""}   type="checkbox" class="form-check-input" /> 
+                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[0]?.date}' , event)" ${data?.days[0]?.attended ? "checked" : ""}    type="checkbox" class="form-check-input" /> 
                 <br />
                 <span>${data.days[0]?.wage ?? data.worker.currentWage}</span>
                 </td>
-                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[1]?.date}' , event)" ${data?.days[1]?.attended ? "checked" : ""}  ${isPastWeek ? "disabled" : ""} type="checkbox" class="form-check-input" /> 
+                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[1]?.date}' , event)" ${data?.days[1]?.attended ? "checked" : ""}   type="checkbox" class="form-check-input" /> 
                 <br />  
                 <span>${data.days[1]?.wage ?? data.worker.currentWage}</span>
                 </td>
-                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[2]?.date}' , event)" ${data?.days[2]?.attended ? "checked" : ""} ${isPastWeek ? "disabled" : ""} type="checkbox" class="form-check-input" /> 
+                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[2]?.date}' , event)" ${data?.days[2]?.attended ? "checked" : ""}  type="checkbox" class="form-check-input" /> 
                 <br />  
                 <span>${data.days[2]?.wage ?? data.worker.currentWage}</span>
                 </td>
-                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[3]?.date}' , event)" ${data?.days[3]?.attended ? "checked" : ""} ${isPastWeek ? "disabled" : ""} type="checkbox" class="form-check-input" /> 
+                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[3]?.date}' , event)" ${data?.days[3]?.attended ? "checked" : ""}  type="checkbox" class="form-check-input" /> 
                 <br />  
                 <span>${data.days[3]?.wage ?? data.worker.currentWage}</span>
                 </td>
-                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[4]?.date}' , event)" ${data?.days[4]?.attended ? "checked" : ""} ${isPastWeek ? "disabled" : ""} type="checkbox" class="form-check-input" /> 
+                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[4]?.date}' , event)" ${data?.days[4]?.attended ? "checked" : ""}  type="checkbox" class="form-check-input" /> 
                 <br />  
                 <span>${data.days[4]?.wage ?? data.worker.currentWage}</span>
                 </td>
-                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[5]?.date}' , event)" ${data?.days[5]?.attended ? "checked" : ""} ${isPastWeek ? "disabled" : ""} type="checkbox" class="form-check-input" /> 
+                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[5]?.date}' , event)" ${data?.days[5]?.attended ? "checked" : ""}  type="checkbox" class="form-check-input" /> 
                 <br />  
                 <span>${data.days[5]?.wage ?? data.worker.currentWage}</span>
                 </td>
-                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[6]?.date}' , event)" ${data?.days[6]?.attended ? "checked" : ""} ${isPastWeek ? "disabled" : ""} type="checkbox" class="form-check-input" /> 
+                <td><input onchange="handelAttendance('${data?.worker?._id}' , '${data?.days[6]?.date}' , event)" ${data?.days[6]?.attended ? "checked" : ""}  type="checkbox" class="form-check-input" /> 
                 <br />  
                 <span>${data.days[6]?.wage ?? data.worker.currentWage}</span>
                 </td>
-                <td>${data.summary?.net}</td>
+                <td id="total-${data?.worker?._id}">${data.summary?.net}</td>
                 <td>
                   <button onclick="deleteWroker('${data.worker._id}')" class="btn btn-danger">حذف</button>
                   <a href="profile.html?id=${data.worker._id}" class="btn btn-primary">تفاصيل</a>
@@ -256,11 +263,11 @@ async function handelAttendance(workerId, date, checkboxEle) {
     const data = await response.json();
     if (data.success) {
       toastify("تم تحديث حضور العمال بنجاح ", "#198754");
-      getWeek();
+      document.getElementById(`total-${workerId}`).innerHTML =
+        data.data.summary.net;
     } else {
       toastify("فشلت العمليه من فضلك اعد المحاوله");
       checkboxEle.target.checked = !isChecked;
-      window.location.reload();
     }
   } catch (error) {
     console.log(error);
