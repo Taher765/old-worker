@@ -305,3 +305,59 @@ async function deleteTransaction(id) {
     console.log(error);
   }
 }
+
+
+
+
+
+
+
+let containerData = []
+
+
+addEventListener("DOMContentLoaded" , ()=> {
+  if(localStorage.getItem("containerDataNotes") != null) {
+    containerData = JSON.parse(localStorage.getItem("containerDataNotes"))
+    displayNotes()
+  }
+})
+
+document.querySelector(".add-note").addEventListener( "click" ,()=> {
+  containerData.push(document.querySelector(".input-note").value)
+
+
+  displayNotes()
+
+  localStorage.setItem("containerDataNotes" , JSON.stringify(containerData))
+  document.querySelector(".input-note").value = ""
+})
+
+const displayNotes = ()=> {
+  let content = "";
+
+  containerData.forEach((note , index)=> {
+   content += `
+    <div class="rounded border w-50 m-auto my-2 d-flex justify-content-between p-2">
+      <p >${note}</p>
+        <button onclick="deleteNote(${index})" class="btn btn-danger">حذف</button>
+    </div>
+    
+    `
+  })
+  
+
+
+  document.querySelector(".divNote").innerHTML = content
+  
+
+}
+
+
+
+function deleteNote (index) {
+
+  containerData.splice(index , 1)
+  localStorage.setItem("containerDataNotes" , JSON.stringify(containerData))
+  displayNotes()
+
+}
